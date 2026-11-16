@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Phạm Nhật - Dịch Vụ Roblox Uy Tín</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 950: '#06040C', 900: '#0B0716', 800: '#130D26', 700: '#1E143B', 600: '#2D1F59' },
+                        violetAccent: { 500: '#8B5CF6', 600: '#7C3AED', 400: '#A78BFA' }
+                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0B0716; color: #F3F4F6; overflow-x: hidden; }
+        .glass-panel { background: rgba(30, 20, 59, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(139, 92, 246, 0.25); }
+        .glow-effect { box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.4); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0716; }
+        ::-webkit-scrollbar-thumb { background: #2D1F59; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-dark-900 min-h-screen flex flex-col justify-between selection:bg-violet-600 selection:text-white">
+
+    <!-- Modal Đăng Nhập / Đăng Ký -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-md p-8 rounded-3xl border border-violet-500/40 glow-effect relative">
+            <button type="button" onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center transition z-10 cursor-pointer">
+                <i class="fa-solid fa-xmark pointer-events-none"></i>
+            </button>
+            <div class="text-center space-y-2 mb-6">
+                <div class="w-14 h-14 bg-gradient-to-tr from-violet-600 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-white text-2xl shadow-lg">
+                    <i class="fa-solid fa-user-shield"></i>
+                </div>
+                <h3 id="auth-modal-title" class="text-2xl font-black text-white">Đăng Nhập Tài Khoản</h3>
+                <p class="text-xs text-gray-400">Đăng nhập tài khoản khách hàng hoặc quản trị viên</p>
+            </div>
+            
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Tài khoản</label>
+                    <input type="text" id="login-username" required placeholder="Tài khoản..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Mật khẩu</label>
+                    <input type="password" id="login-password" required placeholder="Nhập mật khẩu..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-violet-500">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 text-white font-bold rounded-xl shadow-lg transition cursor-pointer">Đăng Nhập Ngay</button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="toggleAuthMode('register')" class="text-xs text-violet-400 hover:text-violet-300 transition cursor-pointer">Chưa có tài khoản? <span class="underline font-bold">Đăng ký ngay</span></button>
+                </div>
+            </form>
+
+            <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Tên tài khoản / Roblox</label>
+                    <input type="text" id="reg-username" required placeholder="Tên tài khoản..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Mật khẩu</label>
+                    <input type="password" id="reg-password" required placeholder="Mật khẩu..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-pink-600 to-violet-600 text-white font-bold rounded-xl shadow-lg transition cursor-pointer">Đăng Ký Tài Khoản</button>
+                <div class="text-center pt-2">
+                    <button type="button" onclick="toggleAuthMode('login')" class="text-xs text-violet-400 hover:text-violet-300 transition cursor-pointer">Đã có tài khoản? <span class="underline font-bold">Đăng nhập</span></button>
+                </div>
+            </form>
+
+            <div class="mt-4 text-center border-t border-violet-900/40 pt-3">
+                <button type="button" onclick="closeAuthModal()" class="text-xs text-gray-400 hover:text-violet-300 underline transition cursor-pointer">Bỏ qua, tiếp tục xem Shop</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Giỏ Hàng -->
+    <div id="cart-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg p-6 rounded-3xl border border-violet-500/40 space-y-4 relative">
+            <button type="button" onclick="closeCart()" class="absolute top-4 right-4 text-gray-400 hover:text-white w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark pointer-events-none"></i></button>
+            <h3 class="text-xl font-black text-white flex items-center"><i class="fa-solid fa-cart-shopping text-pink-500 mr-2"></i> Giỏ Hàng Của Bạn</h3>
+            <div id="cart-items" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
+            <div class="space-y-2 pt-3 border-t border-violet-900/40 text-sm">
+                <div class="flex justify-between text-gray-300"><span>Tổng tiền thanh toán (Đã áp dụng giảm giá hạng):</span><span id="cart-total" class="font-bold text-green-400">0 VNĐ</span></div>
+                <div class="flex justify-between text-gray-300"><span>Số dư ví của bạn:</span><span id="wallet-preview" class="font-bold text-pink-400">0 VNĐ</span></div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 mb-1">Tên nhân vật Roblox (Để kết bạn & giao dịch)</label>
+                <input type="text" id="roblox-username-input" placeholder="Nhập chính xác tên Roblox..." class="w-full bg-dark-900 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+            </div>
+            <button type="button" onclick="checkoutWithBalance()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-xl text-sm shadow-lg cursor-pointer">Thanh Toán Bằng Số Dư Ví</button>
+        </div>
+    </div>
+
+    <!-- Modal Xem Ảnh Bill Nạp -->
+    <div id="bill-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-xl w-full p-6 rounded-3xl border border-violet-500/40 space-y-4 relative text-center">
+            <button type="button" onclick="closeBillModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-lg font-bold text-white">Ảnh Hóa Đơn Chuyển Khoản Momo / Thẻ Cào</h3>
+            <div class="bg-dark-950 p-2 rounded-2xl border border-violet-500/20 max-h-[70vh] overflow-auto flex justify-center">
+                <img id="bill-img-preview" src="" class="max-w-full h-auto rounded-xl object-contain">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thông Báo Thăng Hạng -->
+    <div id="rank-up-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel max-w-md w-full p-6 rounded-3xl border border-amber-500/50 space-y-4 text-center relative glow-effect">
+            <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-yellow-400 rounded-2xl mx-auto flex items-center justify-center text-dark-950 text-3xl shadow-lg">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white">Chúc Mừng Thăng Hạng!</h3>
+            <p id="rank-up-desc" class="text-sm text-amber-300 font-semibold"></p>
+            <button type="button" onclick="closeRankUpModal()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-yellow-500 text-dark-950 font-extrabold rounded-xl shadow-lg cursor-pointer">Tuyệt Vời</button>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-violet-900/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-12 h-12 bg-gradient-to-tr from-violet-600 to-pink-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg glow-effect pointer-events-none">
+                    <i class="fa-solid fa-dragon"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg sm:text-xl text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-400 pointer-events-none">SHOP PHẠM NHẬT</h1>
+                    <p class="text-xs text-gray-400 pointer-events-none">Dịch Vụ Roblox & Dragon Adventures Uy Tín</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center space-x-1">
+                <button type="button" onclick="switchTab('home')" class="px-4 py-2 rounded-xl text-sm font-bold text-violet-400 transition hover:bg-violet-900/30 cursor-pointer">Trang Chủ</button>
+                <button type="button" onclick="switchTab('services')" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 transition hover:bg-violet-900/30 cursor-pointer">Dịch Vụ & Mua Hàng</button>
+                <button type="button" onclick="switchTab('topup')" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 transition hover:bg-violet-900/30 cursor-pointer">Nạp Tiền</button>
+                <button type="button" onclick="switchTab('history')" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 transition hover:bg-violet-900/30 cursor-pointer">Lịch Sử & Hạng</button>
+                <button type="button" onclick="switchTab('orderchat')" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-300 transition hover:bg-violet-900/30 cursor-pointer">Hỗ Trợ Zalo</button>
+                <button type="button" id="nav-admin-btn" onclick="switchTab('admin')" class="px-4 py-2 rounded-xl text-sm font-semibold text-pink-400 transition hover:bg-violet-900/30 cursor-pointer hidden">Quản Trị Admin</button>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <div id="user-wallet-box" class="hidden sm:flex items-center space-x-2 bg-dark-800 border border-violet-500/30 px-3 py-1.5 rounded-xl text-xs font-bold text-pink-400">
+                    <i class="fa-solid fa-wallet"></i> <span id="wallet-balance">0 VNĐ</span>
+                    <span id="user-rank-badge" class="px-2 py-0.5 rounded-md bg-violet-600/30 text-violet-300 text-[10px]">Đồng</span>
+                </div>
+                <button type="button" onclick="openCart()" class="relative p-3 rounded-xl bg-dark-800 border border-violet-500/30 hover:border-violet-500 transition text-gray-300 hover:text-white cursor-pointer">
+                    <i class="fa-solid fa-cart-shopping text-lg pointer-events-none"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-pink-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold hidden pointer-events-none">0</span>
+                </button>
+                <div id="auth-action-area" class="flex items-center space-x-2">
+                    <button type="button" onclick="openAuthModal()" class="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-violet-600/20 border border-violet-500/40 text-violet-300 text-sm font-bold hover:bg-violet-600 hover:text-white transition cursor-pointer">
+                        <i class="fa-solid fa-user-circle pointer-events-none"></i>
+                        <span class="pointer-events-none">Đăng Nhập</span>
+                    </button>
+                </div>
+                <button type="button" onclick="toggleMobileMenu()" class="md:hidden p-3 rounded-xl bg-dark-800 text-gray-300 cursor-pointer"><i class="fa-solid fa-bars pointer-events-none"></i></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full glass-panel border-b border-violet-900/40 px-6 py-4 space-y-3 shadow-2xl z-50">
+            <button type="button" onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-bold text-violet-400 bg-dark-800/50 cursor-pointer">Trang Chủ</button>
+            <button type="button" onclick="switchTab('services'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-300 bg-dark-800/50 cursor-pointer">Dịch Vụ & Mua Hàng</button>
+            <button type="button" onclick="switchTab('topup'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-300 bg-dark-800/50 cursor-pointer">Nạp Tiền</button>
+            <button type="button" onclick="switchTab('history'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-300 bg-dark-800/50 cursor-pointer">Lịch Sử & Hạng</button>
+            <button type="button" onclick="switchTab('orderchat'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-300 bg-dark-800/50 cursor-pointer">Hỗ Trợ Zalo</button>
+            <button type="button" id="mobile-admin-btn" onclick="switchTab('admin'); toggleMobileMenu();" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-pink-400 bg-dark-800/50 cursor-pointer hidden">Quản Trị Admin</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-12">
+
+        <!-- TAB TRANG CHỦ -->
+        <div id="tab-home" class="tab-content space-y-12">
+            <div class="relative rounded-3xl overflow-hidden glass-panel border border-violet-500/30 p-8 sm:p-12 glow-effect">
+                <div class="relative z-10 max-w-2xl space-y-6">
+                    <span class="inline-block bg-violet-600/30 border border-violet-500/50 text-violet-300 text-xs font-bold px-3 py-1.5 rounded-full">
+                        <i class="fa-solid fa-bolt mr-1"></i> Uy Tín - Nhanh Chóng - Giảm Giá Theo Hạng 24/7
+                    </span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight text-white">
+                        Thế Giới <span class="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-pink-500">Dragon Adventures</span> & Roblox
+                    </h2>
+                    <p class="text-sm sm:text-base text-gray-300">Chuyên cung cấp Rồng hiếm, Coin số lượng lớn, Robux và Pot với các đặc quyền giảm giá độc quyền.</p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <button type="button" onclick="switchTab('services')" class="px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-2xl shadow-lg transition cursor-pointer">Khám Phá Dịch Vụ <i class="fa-solid fa-arrow-right ml-2"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white"><i class="fa-solid fa-fire text-pink-500 mr-2"></i> Rồng & Dịch Vụ Nổi Bật</h3>
+                </div>
+                <div id="featured-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- TAB DỊCH VỤ & MUA HÀNG -->
+        <div id="tab-services" class="tab-content hidden space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <h2 class="text-2xl font-black text-white">Danh Mục Sản Phẩm & Tỷ Giá Quy Đổi</h2>
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="search-input" oninput="filterProducts()" placeholder="Tìm kiếm..." class="w-full bg-dark-800 border border-violet-500/30 rounded-2xl px-4 py-3 pl-11 text-sm text-white focus:outline-none">
+                    <i class="fa-solid fa-search absolute left-4 top-3.5 text-gray-400"></i>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" onclick="setCategory('all')" class="cat-btn px-5 py-2.5 rounded-xl bg-violet-600 text-white text-xs font-bold transition cursor-pointer">Tất Cả</button>
+                    <button type="button" onclick="setCategory('dragon')" class="cat-btn px-5 py-2.5 rounded-xl bg-dark-800 text-gray-300 hover:bg-violet-900/30 text-xs font-semibold transition cursor-pointer">Rồng Hiếm</button>
+                    <button type="button" onclick="setCategory('coin')" class="cat-btn px-5 py-2.5 rounded-xl bg-dark-800 text-gray-300 hover:bg-violet-900/30 text-xs font-semibold transition cursor-pointer">Quy Đổi Coin</button>
+                    <button type="button" onclick="setCategory('robux')" class="cat-btn px-5 py-2.5 rounded-xl bg-dark-800 text-gray-300 hover:bg-violet-900/30 text-xs font-semibold transition cursor-pointer">Quy Đổi Robux</button>
+                    <button type="button" onclick="setCategory('potion')" class="cat-btn px-5 py-2.5 rounded-xl bg-dark-800 text-gray-300 hover:bg-violet-900/30 text-xs font-semibold transition cursor-pointer">Pot</button>
+                </div>
+
+                <!-- BỘ LỌC GIÁ (Chỉ hiện khi ở Tất cả, Rồng hoặc Pot) -->
+                <div id="price-filter-container" class="flex flex-wrap items-center gap-2 bg-dark-800/80 p-2 rounded-2xl border border-violet-500/30">
+                    <select id="price-sort-select" onchange="filterProducts()" class="bg-dark-900 border border-violet-500/30 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none cursor-pointer">
+                        <option value="default">Sắp xếp giá</option>
+                        <option value="asc">Thấp đến cao</option>
+                        <option value="desc">Cao đến thấp</option>
+                    </select>
+                    <div class="flex items-center space-x-1 text-xs text-gray-400">
+                        <input type="text" id="price-min" placeholder="Từ (VNĐ)" oninput="formatInputMoney(this); filterProducts();" class="w-24 bg-dark-900 border border-violet-500/30 rounded-xl px-2 py-1.5 text-white text-center focus:outline-none">
+                        <span>-</span>
+                        <input type="text" id="price-max" placeholder="Đến (VNĐ)" oninput="formatInputMoney(this); filterProducts();" class="w-24 bg-dark-900 border border-violet-500/30 rounded-xl px-2 py-1.5 text-white text-center focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUY ĐỔI COIN -->
+            <div id="coin-exchange-section" class="glass-panel p-6 rounded-3xl border border-violet-500/40 space-y-6 hidden">
+                <h3 class="text-xl font-black text-white flex items-center"><i class="fa-solid fa-coins text-amber-400 mr-2"></i> Hệ Thống Quy Đổi Coin Game</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Số tiền VNĐ muốn quy đổi</label>
+                            <input type="text" id="coin-custom-amount" value="50.000" oninput="formatInputMoney(this); calculateCoinPreview();" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                        </div>
+                        <div class="bg-dark-900 p-4 rounded-2xl border border-violet-500/20 space-y-1">
+                            <p class="text-xs text-gray-400">Số Coin khách nhận được:</p>
+                            <p id="coin-result-preview" class="text-xl font-black text-pink-400">0 Coin</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Username Roblox (Bắt buộc)</label>
+                            <input type="text" id="coin-roblox-user" placeholder="Tên nhân vật trong game..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                        </div>
+                        <button type="button" onclick="submitCoinOrder()" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg transition text-sm cursor-pointer">Xác Nhận Đặt Đơn Quy Đổi Coin</button>
+                    </div>
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold text-violet-300">Bảng Quy Đổi Mệnh Giá Công Khai</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-dark-800 text-gray-400 uppercase text-xs">
+                                    <tr>
+                                        <th class="py-2.5 px-3 rounded-l-xl">Số tiền</th>
+                                        <th class="py-2.5 px-3">Coin nhận được</th>
+                                        <th class="py-2.5 px-3 text-right rounded-r-xl">Chọn nhanh</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="coin-table-body" class="divide-y divide-violet-900/20 text-xs"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUY ĐỔI ROBUX -->
+            <div id="robux-exchange-section" class="glass-panel p-6 rounded-3xl border border-violet-500/40 space-y-6 hidden">
+                <h3 class="text-xl font-black text-white flex items-center"><i class="fa-solid fa-gem text-cyan-400 mr-2"></i> Hệ Thống Quy Đổi Robux</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Số tiền VNĐ muốn quy đổi</label>
+                            <input type="text" id="robux-custom-amount" value="50.000" oninput="formatInputMoney(this); calculateRobuxPreview();" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                        </div>
+                        <div class="bg-dark-900 p-4 rounded-2xl border border-violet-500/20 space-y-1">
+                            <p class="text-xs text-gray-400">Số Robux khách nhận được:</p>
+                            <p id="robux-result-preview" class="text-xl font-black text-cyan-400">0 Robux</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Username Roblox (Bắt buộc)</label>
+                            <input type="text" id="robux-roblox-user" placeholder="Tên nhân vật trong game..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                        </div>
+                        <button type="button" onclick="submitRobuxOrder()" class="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg transition text-sm cursor-pointer">Xác Nhận Đặt Đơn Quy Đổi Robux</button>
+                    </div>
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold text-violet-300">Bảng Quy Đổi Mệnh Giá Công Khai</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-dark-800 text-gray-400 uppercase text-xs">
+                                    <tr>
+                                        <th class="py-2.5 px-3 rounded-l-xl">Số tiền</th>
+                                        <th class="py-2.5 px-3">Robux nhận được</th>
+                                        <th class="py-2.5 px-3 text-right rounded-r-xl">Chọn nhanh</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="robux-table-body" class="divide-y divide-violet-900/20 text-xs"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LƯỚI SẢN PHẨM -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- TAB NẠP TIỀN -->
+        <div id="tab-topup" class="tab-content hidden max-w-4xl mx-auto space-y-8">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-black text-white">Nạp Tiền Vào Tài Khoản</h2>
+                <p class="text-sm text-pink-400 font-semibold bg-pink-950/40 p-3 rounded-xl border border-pink-500/30">Nạp qua Momo hoặc Thẻ cào điện thoại để số dư cộng trực tiếp vào ví website!</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- NẠP MOMO -->
+                <div class="glass-panel p-6 rounded-3xl border border-violet-500/30 text-center space-y-4 flex flex-col items-center">
+                    <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-qrcode text-pink-400 mr-2"></i> Chuyển Khoản Ví Momo</h3>
+                    <div class="bg-dark-900 p-3 rounded-2xl border border-violet-500/20 w-full flex justify-center">
+                        <img id="display-qr-img" src="https://placehold.co/300x350/1E143B/A78BFA?text=MOMO+QR+0395033213" alt="QR Momo" class="w-full max-w-[260px] h-auto mx-auto rounded-xl object-contain">
+                    </div>
+                    <div class="text-xs text-gray-300 space-y-1 text-left bg-dark-900 p-4 rounded-xl w-full">
+                        <p><strong>Phương thức:</strong> Ví Điện Tử Momo</p>
+                        <p><strong>Chủ tài khoản:</strong> PHẠM MINH NHẬT</p>
+                        <p><strong>Số điện thoại / Momo:</strong> 0395033213</p>
+                        <p><strong>Nội dung:</strong> Tên tài khoản Roblox nạp tiền</p>
+                    </div>
+                    <form onsubmit="handleBankTransfer(event)" class="space-y-3 w-full text-left pt-2 border-t border-violet-900/40">
+                        <h4 class="text-xs font-bold text-violet-300">Xác Nhận Đã Chuyển Momo</h4>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Số tiền đã chuyển (VNĐ)</label>
+                            <input type="text" id="bank-amount" required placeholder="100.000" oninput="formatInputMoney(this)" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Tải ảnh bill từ máy</label>
+                            <input type="file" id="bank-bill-file" accept="image/*" required class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-3 py-2 text-xs text-gray-300 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:bg-pink-600 file:text-white">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-pink-600 to-violet-600 text-white font-bold rounded-xl shadow-lg transition text-xs cursor-pointer">Gửi Xác Nhận Chờ Duyệt</button>
+                    </form>
+                </div>
+
+                <!-- NẠP THẺ CÀO -->
+                <div class="glass-panel p-6 rounded-3xl border border-violet-500/30 space-y-4">
+                    <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-sim-card text-pink-400 mr-2"></i> Nạp Thẻ Cào Điện Thoại</h3>
+                    <div class="bg-amber-950/30 border border-amber-500/40 p-3.5 rounded-2xl space-y-1 text-xs text-amber-200">
+                        <p class="font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Biểu phí chiết khấu thẻ cào (Quy đổi về số dư ví Web):</p>
+                        <p>• <strong>Vinaphone:</strong> Trừ phí <strong>16%</strong> (Nhận <strong>84%</strong>)</p>
+                        <p>• <strong>Garena, Zing:</strong> Trừ phí <strong>16.5%</strong> (Nhận <strong>83.5%</strong>)</p>
+                    </div>
+                    <form onsubmit="handleTopupCard(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Loại thẻ</label>
+                            <select id="card-type" onchange="calculateCardReceive()" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                                <option value="Vinaphone">Vinaphone (Trừ 16%)</option>
+                                <option value="Garena">Garena (Trừ 16.5%)</option>
+                                <option value="Zing">Zing (Trừ 16.5%)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Mệnh giá</label>
+                            <select id="card-amount" onchange="calculateCardReceive()" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                                <option value="50000">50.000 VNĐ</option>
+                                <option value="100000">100.000 VNĐ</option>
+                                <option value="200000">200.000 VNĐ</option>
+                                <option value="500000">500.000 VNĐ</option>
+                            </select>
+                        </div>
+                        <div class="bg-dark-900 p-3 rounded-xl border border-violet-500/20 flex justify-between items-center text-xs">
+                            <span class="text-gray-400">Số tiền thực nhận vào ví web:</span>
+                            <span id="card-receive-preview" class="font-black text-pink-400 text-sm">42.000 VNĐ</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Mã thẻ cào</label>
+                            <input type="text" id="card-code" required placeholder="Mã thẻ..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Số Serial</label>
+                            <input type="text" id="card-serial" required placeholder="Số seri..." class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 mb-1">Tải ảnh thẻ hoặc bill (Tùy chọn)</label>
+                            <input type="file" id="card-bill-file" accept="image/*" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-3 py-2 text-xs text-gray-300 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:bg-violet-600 file:text-white">
+                        </div>
+                        <button type="submit" class="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-bold rounded-xl shadow-lg transition text-sm mt-2 cursor-pointer">Xác Nhận Gửi Thẻ</button>
+                    </form>
+                </div>
+            </div>
+            <div id="section-my-topup-history" class="glass-panel p-6 rounded-3xl border border-violet-500/30 space-y-4">
+                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-clock-rotate-left mr-2 text-violet-400"></i> Lịch Sử Nạp Tiền / Thẻ Cào Của Bạn</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-dark-800 text-gray-400 uppercase text-xs">
+                            <tr><th class="py-3 px-4">Mã giao dịch</th><th class="py-3 px-4">Chi tiết thẻ / Bank</th><th class="py-3 px-4">Mệnh giá / Thực nhận</th><th class="py-3 px-4">Trạng thái</th></tr>
+                        </thead>
+                        <tbody id="my-topup-table" class="divide-y divide-violet-900/20"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB LỊCH SỬ & HẠNG -->
+        <div id="tab-history" class="tab-content hidden max-w-4xl mx-auto space-y-8">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-violet-500/40 space-y-6 bg-gradient-to-b from-[#1E143B] via-[#0B0716] to-[#130D26]">
+                <div class="text-center space-y-2 pb-4 border-b border-violet-900/40">
+                    <div class="inline-flex items-center space-x-2 bg-violet-600/30 border border-violet-500/50 px-4 py-1.5 rounded-full text-violet-300 text-xs font-bold">
+                        <i class="fa-solid fa-crown text-amber-400"></i>
+                        <span>Hạng Thành Viên & Tiến Trình</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white">Nâng Hạng Để Nhận Ưu Đãi Giảm Giá</h2>
+                    <p class="text-xs text-gray-400">Tích lũy chi tiêu qua các đơn hàng hoàn thành để nâng hạng và nhận đặc quyền độc quyền!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-panel p-5 rounded-2xl border border-violet-500/30 flex flex-col items-center justify-center text-center space-y-2 bg-dark-900/80">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-600 flex items-center justify-center text-3xl shadow-lg glow-effect text-white">
+                            <i id="current-rank-icon" class="fa-solid fa-shield"></i>
+                        </div>
+                        <span class="text-xs text-gray-400 font-semibold">Hạng hiện tại</span>
+                        <h3 id="my-current-rank-tag" class="text-lg font-black text-orange-400">Đồng</h3>
+                        <span id="current-rank-discount" class="px-3 py-0.5 bg-orange-600/30 text-orange-300 rounded-full text-xs font-bold border border-orange-500/40">Giảm giá: 0%</span>
+                    </div>
+                    <div class="glass-panel p-5 rounded-2xl border border-violet-500/30 flex flex-col justify-center space-y-2 bg-dark-900/80 md:col-span-2">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-coins text-amber-400"></i>
+                                <span class="text-xs text-gray-400 font-semibold">Tiến trình tích lũy</span>
+                            </div>
+                            <span id="next-rank-info" class="text-xs text-amber-300 font-bold">Mốc tiếp theo: Bạc</span>
+                        </div>
+                        <p id="my-total-spent-txt" class="text-2xl font-black text-pink-400">0 VNĐ</p>
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs text-gray-400">
+                                <span id="progress-percent-label">0.00%</span>
+                                <span id="next-rank-target-txt">Còn thiếu: 500.000 VNĐ</span>
+                            </div>
+                            <div class="w-full bg-dark-800 h-3.5 rounded-full overflow-hidden p-0.5 border border-violet-500/30">
+                                <div id="rank-progress-bar" class="bg-gradient-to-r from-orange-500 via-yellow-500 to-amber-400 h-full rounded-full transition-all duration-700 shadow-[0_0_15px_rgba(251,191,36,0.5)]" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 pt-2">
+                    <div id="card-rank-dong" class="glass-panel p-4 rounded-2xl border border-orange-500/50 text-center space-y-2 bg-orange-950/30 relative shadow-[0_0_15px_rgba(249,115,22,0.3)]">
+                        <div id="badge-rank-dong-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-orange-500 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-orange-600/20 text-orange-400 flex items-center justify-center text-lg"><i class="fa-solid fa-shield"></i></div>
+                        <h4 class="font-bold text-white text-xs">Đồng</h4>
+                        <p class="text-[10px] text-gray-400">0đ – < 500.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-orange-500/20 text-orange-300 rounded text-[10px] font-bold">Giảm 0%</span>
+                    </div>
+                    <div id="card-rank-bac" class="glass-panel p-4 rounded-2xl border border-slate-400/30 text-center space-y-2 bg-dark-900/60 relative">
+                        <div id="badge-rank-bac-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-slate-400 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-slate-400/20 text-slate-300 flex items-center justify-center text-lg"><i class="fa-solid fa-shield"></i></div>
+                        <h4 class="font-bold text-white text-xs">Bạc</h4>
+                        <p class="text-[10px] text-gray-400">≥ 500.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-slate-400/20 text-slate-300 rounded text-[10px] font-bold">Giảm 1%</span>
+                    </div>
+                    <div id="card-rank-vang" class="glass-panel p-4 rounded-2xl border border-amber-400/30 text-center space-y-2 bg-dark-900/60 relative">
+                        <div id="badge-rank-vang-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-amber-400 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-amber-400/20 text-amber-300 flex items-center justify-center text-lg"><i class="fa-solid fa-crown"></i></div>
+                        <h4 class="font-bold text-white text-xs">Vàng</h4>
+                        <p class="text-[10px] text-gray-400">≥ 1.000.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-amber-400/20 text-amber-300 rounded text-[10px] font-bold">Giảm 2%</span>
+                    </div>
+                    <div id="card-rank-kimcuong" class="glass-panel p-4 rounded-2xl border border-cyan-400/30 text-center space-y-2 bg-dark-900/60 relative">
+                        <div id="badge-rank-kimcuong-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-cyan-500 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-lg"><i class="fa-solid fa-gem"></i></div>
+                        <h4 class="font-bold text-white text-xs">Kim Cương</h4>
+                        <p class="text-[10px] text-gray-400">≥ 2.000.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-cyan-500/20 text-cyan-300 rounded text-[10px] font-bold">Giảm 3%</span>
+                    </div>
+                    <div id="card-rank-triton" class="glass-panel p-4 rounded-2xl border border-purple-500/30 text-center space-y-2 bg-dark-900/60 relative">
+                        <div id="badge-rank-triton-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-purple-500 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center text-lg"><i class="fa-solid fa-star"></i></div>
+                        <h4 class="font-bold text-white text-xs">Trí Tôn</h4>
+                        <p class="text-[10px] text-gray-400">≥ 3.000.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded text-[10px] font-bold">Giảm 4%</span>
+                    </div>
+                    <div id="card-rank-phithang" class="glass-panel p-4 rounded-2xl border border-pink-500/30 text-center space-y-2 bg-dark-900/60 relative">
+                        <div id="badge-rank-phithang-tag" class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-pink-500 text-dark-950 text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden">Hạng hiện tại</div>
+                        <div class="w-10 h-10 mx-auto rounded-xl bg-pink-500/20 text-pink-300 flex items-center justify-center text-lg"><i class="fa-solid fa-fire"></i></div>
+                        <h4 class="font-bold text-white text-xs">Phi Thăng</h4>
+                        <p class="text-[10px] text-gray-400">≥ 5.000.000đ</p>
+                        <span class="inline-block px-2 py-0.5 bg-pink-500/20 text-pink-300 rounded text-[10px] font-bold">Giảm 5%</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4 pt-4 border-t border-violet-900/40">
+                    <h3 class="text-lg font-bold text-white">Lịch Sử Đơn Hàng Của Bạn</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-dark-800 text-gray-400 uppercase text-xs">
+                                <tr><th class="py-3 px-4">Mã đơn</th><th class="py-3 px-4">Thông tin / User</th><th class="py-3 px-4">Giá tiền</th><th class="py-3 px-4">Trạng thái</th></tr>
+                            </thead>
+                            <tbody id="my-orders-table" class="divide-y divide-violet-900/20"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB HỖ TRỢ ZALO -->
+        <div id="tab-orderchat" class="tab-content hidden max-w-4xl mx-auto space-y-8">
+            <div class="glass-panel p-6 sm:p-8 rounded-3xl border border-violet-500/40 space-y-6 text-center">
+                <div class="w-16 h-16 bg-gradient-to-tr from-blue-600 to-cyan-600 rounded-2xl mx-auto flex items-center justify-center text-white text-3xl shadow-lg">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h2 class="text-2xl font-black text-white">Liên Hệ Hỗ Trợ Trực Tiếp Zalo</h2>
+                <p class="text-sm text-gray-300">Mọi đơn hàng sau khi đặt (Rồng, Coin, Robux, Pot) sẽ được Admin duyệt nhanh, done và cộng điểm tích lũy trực tiếp khi bạn liên hệ qua Zalo của shop!</p>
+                <div class="py-4">
+                    <a href="https://zalo.me/0395033213" target="_blank" class="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-extrabold rounded-2xl shadow-xl hover:scale-105 transition text-base">
+                        <i class="fa-solid fa-comment-dots text-xl"></i>
+                        <span>Chat Ngay Zalo: 0395033213</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB ADMIN -->
+        <div id="tab-admin" class="tab-content hidden space-y-8 max-w-full overflow-hidden">
+            <div class="glass-panel p-4 sm:p-8 rounded-3xl border border-pink-500/40 space-y-6 w-full max-w-full box-border">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-violet-900/40 pb-6">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-black text-white"><i class="fa-solid fa-user-shield text-pink-500 mr-2"></i> Bảng Quản Trị Hệ Thống Shop</h2>
+                    </div>
+                    <button type="button" onclick="openAddProductModal()" class="px-5 py-3 bg-gradient-to-r from-pink-600 to-violet-600 text-white font-bold rounded-xl shadow-lg transition text-xs sm:text-sm cursor-pointer hover:scale-105">
+                        <i class="fa-solid fa-plus-circle mr-1"></i> Thêm Hàng Loạt Link Rồng / Pot
+                    </button>
+                </div>
+
+                <!-- KHU VỰC BAN TÀI KHOẢN -->
+                <div class="bg-red-950/30 p-5 rounded-2xl border border-red-500/30 space-y-3">
+                    <h3 class="font-bold text-red-400 text-sm"><i class="fa-solid fa-user-slash mr-2"></i> Quản Lý Ban (Xóa Vĩnh Viễn) Tài Khoản Khách Hàng</h3>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="ban-username-input" placeholder="Nhập tên tài khoản cần ban..." class="flex-1 bg-dark-900 border border-red-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none">
+                        <button type="button" onclick="handleBanUser()" class="px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl text-xs transition cursor-pointer">Ban / Xóa Tài Khoản</button>
+                    </div>
+                </div>
+
+                <div class="bg-dark-800 p-5 rounded-2xl border border-violet-500/30 space-y-4">
+                    <h3 class="font-bold text-white text-sm">Cài Đặt Tỷ Giá (Rate) Quy Đổi Coin & Robux</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div><label class="block text-xs font-semibold text-gray-400 mb-1">Coin / 10k</label><input type="text" id="admin-rate-coin-bank" oninput="formatInputMoney(this)" class="w-full bg-dark-900 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white"></div>
+                        <div><label class="block text-xs font-semibold text-gray-400 mb-1">Robux / 10k</label><input type="text" id="admin-rate-robux-bank" oninput="formatInputMoney(this)" class="w-full bg-dark-900 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white"></div>
+                    </div>
+                    <button type="button" onclick="saveExchangeRates()" class="px-6 py-3 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-bold rounded-xl text-sm shadow-lg cursor-pointer">Lưu Tỷ Giá</button>
+                </div>
+                <div class="space-y-6 pt-4 border-t border-violet-900/40">
+                    <h3 class="text-lg font-black text-white">Khu Vực Duyệt Đơn Nhanh (1 Lần Hoàn Tất)</h3>
+                    <div class="space-y-3 bg-dark-800 p-4 rounded-2xl border border-violet-500/20">
+                        <h4 class="text-sm font-bold text-amber-400">1. Duyệt Nạp Momo & Thẻ Cào</h4>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm min-w-[600px]"><tbody id="admin-topup-table"></tbody></table></div>
+                    </div>
+                    <div class="space-y-3 bg-dark-800 p-4 rounded-2xl border border-violet-500/20">
+                        <h4 class="text-sm font-bold text-violet-400">2. Duyệt Đơn Mua Hàng (Rồng, Pot, Coin, Robux...)</h4>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm min-w-[600px]"><tbody id="admin-dragon-orders-table"></tbody></table></div>
+                    </div>
+                </div>
+                <div class="space-y-6 pt-4 border-t border-violet-900/40">
+                    <h3 class="text-lg font-bold text-white">Quản Lý & Chỉnh Sửa Trực Tiếp Sản Phẩm</h3>
+                    <p class="text-xs text-gray-400">Bạn có thể sửa trực tiếp Tên, Giá, Mô tả và bấm Lưu ngay tại mỗi thẻ sản phẩm bên dưới.</p>
+                    <div class="space-y-2"><h4 class="text-xs font-bold text-violet-400">Rồng Hiếm</h4><div id="admin-dragon-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
+                    <div class="space-y-2"><h4 class="text-xs font-bold text-violet-400">Coin Game</h4><div id="admin-coin-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
+                    <div class="space-y-2"><h4 class="text-xs font-bold text-violet-400">Robux</h4><div id="admin-robux-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
+                    <div class="space-y-2"><h4 class="text-xs font-bold text-violet-400">Pot</h4><div id="admin-potion-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Thêm Sản Phẩm Hàng Loạt -->
+    <div id="product-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg p-6 rounded-3xl border border-violet-500/40 space-y-6 relative">
+            <button type="button" onclick="closeProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white w-8 h-8 rounded-full bg-dark-700 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark pointer-events-none"></i></button>
+            <h3 class="text-xl font-black text-white">Thêm Sản Phẩm Hàng Loạt Bằng Link</h3>
+            <form onsubmit="saveBatchProducts(event)" class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-400 mb-1">Danh mục</label>
+                        <select id="p-category" class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white">
+                            <option value="dragon">Rồng Hiếm</option>
+                            <option value="coin">Coin Game</option>
+                            <option value="robux">Robux</option>
+                            <option value="potion">Pot</option>
+                        </select>
+                    </div>
+                    <div><label class="block text-xs font-semibold text-gray-400 mb-1">Giá Bank (VNĐ)</label><input type="number" id="p-price" value="150000" required class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">Danh sách Link Ảnh (Dán xuống dòng hoặc cách nhau)</label>
+                    <textarea id="p-links" rows="6" oninput="updateDetectedLinksCount()" placeholder="https://image1.png&#10;https://image2.png" required class="w-full bg-dark-800 border border-violet-500/30 rounded-xl px-4 py-2.5 text-sm text-white font-mono"></textarea>
+                    <p id="detected-links-count" class="text-[11px] text-violet-400 font-semibold mt-1">Đã nhận diện: 0 ảnh</p>
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-violet-600 to-pink-600 text-white font-bold rounded-xl text-sm shadow-lg cursor-pointer">Tạo Thẻ Hàng Loạt</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-panel px-6 py-4 rounded-2xl border border-violet-500/50 shadow-2xl flex items-center space-x-3">
+            <i class="fa-solid fa-circle-check text-green-400 text-xl"></i>
+            <span id="toast-message" class="text-sm font-semibold text-white">Thành công!</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-violet-900/40 py-8 mt-12 text-center text-xs text-gray-400 space-y-2">
+        <p class="font-bold text-violet-300 text-sm">SHOP PHẠM NHẬT - DỊCH VỤ ROBLOX & DRAGON ADVENTURES</p>
+        <p>Hotline / Zalo: <span class="text-pink-400 font-bold">0395033213</span></p>
+        <p>&copy; 2026 Shop Phạm Nhật. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        let exchangeRates = JSON.parse(localStorage.getItem('shop_rates')) || { coinBank: 20000000, robuxBank: 80 };
+        let products = JSON.parse(localStorage.getItem('shop_products')) || [
+            { id: 1, name: 'Rồng Astra Megalodon', category: 'dragon', price: 150000, image: 'https://placehold.co/400x300/1E143B/A78BFA?text=Dragon', badge: 'Hot', desc: 'Rồng hiếm.' },
+            { id: 2, name: 'Gói Coin Game', category: 'coin', price: 50000, image: 'https://placehold.co/400x300/1E143B/A78BFA?text=Coin', badge: 'VIP', desc: 'Gói coin.' },
+            { id: 3, name: 'Gói Robux', category: 'robux', price: 100000, image: 'https://placehold.co/400x300/1E143B/A78BFA?text=Robux', badge: 'New', desc: 'Gói robux.' }
+        ];
+        let adminOrders = JSON.parse(localStorage.getItem('shop_orders')) || [];
+        let bankQRUrl = localStorage.getItem('shop_qr') || 'https://placehold.co/300x350/1E143B/A78BFA?text=MOMO+QR+0395033213';
+        
+        let currentCategory = 'all';
+        let registeredUsers = JSON.parse(localStorage.getItem('shop_users')) || [
+            { username: '123', password: '06042007@', balance: 99999999, totalSpent: 5000000, lastRankKey: 'phithang', isAdmin: true }
+        ];
+        let currentUser = JSON.parse(localStorage.getItem('current_logged_user')) || null;
+
+        // Tự động kiểm tra và đồng bộ liên tục mỗi 1 giây để không cần out ra vô lại
+        setInterval(function() {
+            let latestOrders = JSON.parse(localStorage.getItem('shop_orders')) || [];
+            let latestRates = JSON.parse(localStorage.getItem('shop_rates')) || exchangeRates;
+            let latestUsers = JSON.parse(localStorage.getItem('shop_users')) || registeredUsers;
+            
+            if (JSON.stringify(latestOrders) !== JSON.stringify(adminOrders)) {
+                adminOrders = latestOrders;
+                renderMyHistory();
+                if (currentUser && currentUser.isAdmin) renderAdminDashboard();
+            }
+            if (JSON.stringify(latestRates) !== JSON.stringify(exchangeRates)) {
+                exchangeRates = latestRates;
+                renderExchangeTables();
+            }
+            if (currentUser) {
+                let uFound = latestUsers.find(x => x.username.toLowerCase() === currentUser.username.toLowerCase());
+                if (uFound && (uFound.balance !== currentUser.balance || uFound.totalSpent !== currentUser.totalSpent)) {
+                    currentUser = uFound;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                }
+            }
+        }, 1000);
+
+        window.onload = function() {
+            let adminAcc = registeredUsers.find(x => x.username.toLowerCase() === '123');
+            if (adminAcc) {
+                adminAcc.isAdmin = true;
+            } else {
+                registeredUsers.push({ username: '123', password: '06042007@', balance: 99999999, totalSpent: 5000000, lastRankKey: 'phithang', isAdmin: true });
+            }
+            if (currentUser && currentUser.username.toLowerCase() === '123') {
+                currentUser.isAdmin = true;
+                localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+            }
+            localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+            localStorage.setItem('shop_products', JSON.stringify(products));
+            localStorage.setItem('shop_rates', JSON.stringify(exchangeRates));
+
+            document.getElementById('display-qr-img').src = bankQRUrl;
+            syncDataFromStorage();
+            calculateCardReceive();
+            if (!currentUser) openAuthModal();
+        };
+
+        function calculateCardReceive() {
+            const type = document.getElementById('card-type').value;
+            const amt = Number(document.getElementById('card-amount').value) || 0;
+            let percent = 0.84;
+            if (type === 'Garena' || type === 'Zing') percent = 0.835;
+            const receiveAmount = Math.round(amt * percent);
+            const previewEl = document.getElementById('card-receive-preview');
+            if (previewEl) {
+                previewEl.innerText = formatMoney(receiveAmount);
+            }
+        }
+
+        function syncDataFromStorage() {
+            products = JSON.parse(localStorage.getItem('shop_products')) || products;
+            adminOrders = JSON.parse(localStorage.getItem('shop_orders')) || adminOrders;
+            exchangeRates = JSON.parse(localStorage.getItem('shop_rates')) || exchangeRates;
+            registeredUsers = JSON.parse(localStorage.getItem('shop_users')) || registeredUsers;
+            
+            if (currentUser) {
+                let found = registeredUsers.find(x => x.username.toLowerCase() === currentUser.username.toLowerCase());
+                if (found) {
+                    currentUser = found;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                }
+            }
+            updateUserUI();
+            renderFeaturedProducts();
+            renderExchangeTables();
+            if (currentCategory === 'coin' || currentCategory === 'robux') {
+                calculateCoinPreview();
+                calculateRobuxPreview();
+            } else {
+                filterProducts();
+            }
+            if (currentUser && currentUser.isAdmin) {
+                renderAdminDashboard();
+            }
+        }
+
+        function getCurrentUserDiscountRate() {
+            if (!currentUser) return 0;
+            let spent = currentUser.totalSpent || 0;
+            if (spent >= 5000000) return 0.05; // 5%
+            if (spent >= 3000000) return 0.04; // 4%
+            if (spent >= 2000000) return 0.03; // 3%
+            if (spent >= 1000000) return 0.02; // 2%
+            if (spent >= 500000) return 0.01;  // 1%
+            return 0;
+        }
+
+        function formatInputMoney(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (val === '') { input.value = ''; return; }
+            input.value = Number(val).toLocaleString('vi-VN');
+        }
+
+        function parseMoneyInput(valStr) {
+            if (!valStr) return 0;
+            // Thay thế cả dấu chấm, dấu phẩy hoặc khoảng trắng để hệ thống đọc hiểu chính xác
+            let cleanStr = valStr.toString().replace(/\./g, '').replace(/,/g, '').replace(/\s/g, '');
+            return Number(cleanStr) || 0;
+        }
+
+        function saveExchangeRates() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            exchangeRates = {
+                coinBank: parseMoneyInput(document.getElementById('admin-rate-coin-bank').value),
+                robuxBank: parseMoneyInput(document.getElementById('admin-rate-robux-bank').value)
+            };
+            localStorage.setItem('shop_rates', JSON.stringify(exchangeRates));
+            
+            renderExchangeTables();
+            calculateCoinPreview();
+            calculateRobuxPreview();
+            
+            showNotification('Lưu và đồng bộ tỷ giá thành công vĩnh viễn!');
+        }
+
+        function renderExchangeTables() {
+            if (document.getElementById('admin-rate-coin-bank')) {
+                document.getElementById('admin-rate-coin-bank').value = exchangeRates.coinBank.toLocaleString('vi-VN');
+                document.getElementById('admin-rate-robux-bank').value = exchangeRates.robuxBank.toLocaleString('vi-VN');
+            }
+            const amounts = [10000, 20000, 50000, 100000, 200000, 500000];
+            const coinRate = exchangeRates.coinBank;
+            const robuxRate = exchangeRates.robuxBank;
+
+            document.getElementById('coin-table-body').innerHTML = amounts.map(amt => {
+                const rec = (amt / 10000) * coinRate;
+                return `<tr class="border-b border-violet-900/20"><td class="py-2 px-3 font-bold text-white">${formatMoney(amt)}</td><td class="py-2 px-3 font-bold text-pink-400">${rec.toLocaleString('vi-VN')} Coin</td><td class="py-2 px-3 text-right"><button type="button" onclick="selectQuickCoin(${amt})" class="px-3 py-1 bg-violet-600/30 hover:bg-violet-600 text-violet-300 hover:text-white rounded-lg font-bold cursor-pointer">Chọn</button></td></tr>`;
+            }).join('');
+
+            document.getElementById('robux-table-body').innerHTML = amounts.map(amt => {
+                const rec = Math.round((amt / 10000) * robuxRate);
+                return `<tr class="border-b border-violet-900/20"><td class="py-2 px-3 font-bold text-white">${formatMoney(amt)}</td><td class="py-2 px-3 font-bold text-cyan-400">${rec.toLocaleString('vi-VN')} Robux</td><td class="py-2 px-3 text-right"><button type="button" onclick="selectQuickRobux(${amt})" class="px-3 py-1 bg-cyan-600/30 hover:bg-cyan-600 text-cyan-300 hover:text-white rounded-lg font-bold cursor-pointer">Chọn</button></td></tr>`;
+            }).join('');
+        }
+
+        function calculateCoinPreview() {
+            const amt = parseMoneyInput(document.getElementById('coin-custom-amount').value);
+            const rec = (amt / 10000) * exchangeRates.coinBank;
+            document.getElementById('coin-result-preview').innerText = rec.toLocaleString('vi-VN') + ' Coin';
+            renderExchangeTables();
+        }
+
+        function calculateRobuxPreview() {
+            const amt = parseMoneyInput(document.getElementById('robux-custom-amount').value);
+            const rec = Math.round((amt / 10000) * exchangeRates.robuxBank);
+            document.getElementById('robux-result-preview').innerText = rec.toLocaleString('vi-VN') + ' Robux';
+            renderExchangeTables();
+        }
+
+        function selectQuickCoin(amt) { document.getElementById('coin-custom-amount').value = amt.toLocaleString('vi-VN'); calculateCoinPreview(); }
+        function selectQuickRobux(amt) { document.getElementById('robux-custom-amount').value = amt.toLocaleString('vi-VN'); calculateRobuxPreview(); }
+
+        function submitCoinOrder() {
+            if (!currentUser) { openAuthModal(); return; }
+            const amt = parseMoneyInput(document.getElementById('coin-custom-amount').value);
+            const u = document.getElementById('coin-roblox-user').value.trim();
+            if (amt <= 0 || !u) { showNotification('Vui lòng điền đủ thông tin!', true); return; }
+            if ((currentUser.balance || 0) < amt) { showNotification('Số dư ví không đủ để đặt đơn!', true); return; }
+            
+            currentUser.balance -= amt;
+            localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+            updateUserBalanceInStorage();
+
+            const rec = (amt / 10000) * exchangeRates.coinBank;
+            const orderId = 'COIN-' + Math.floor(1000 + Math.random() * 9000);
+            
+            adminOrders.unshift({ id: orderId, customer: currentUser.username, robuxUser: u, detail: `Quy đổi Coin: Nhận ${rec.toLocaleString('vi-VN')} Coin`, price: amt, status: 'Chờ xử lý', isTopup: false, productId: null });
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+
+            showNotification('Đặt đơn Coin thành công! Vui lòng liên hệ Zalo 0395033213 để được duyệt.');
+            switchTab('orderchat');
+        }
+
+        function submitRobuxOrder() {
+            if (!currentUser) { openAuthModal(); return; }
+            const amt = parseMoneyInput(document.getElementById('robux-custom-amount').value);
+            const u = document.getElementById('robux-roblox-user').value.trim();
+            if (amt <= 0 || !u) { showNotification('Vui lòng điền đủ thông tin!', true); return; }
+            if ((currentUser.balance || 0) < amt) { showNotification('Số dư ví không đủ để đặt đơn!', true); return; }
+
+            currentUser.balance -= amt;
+            localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+            updateUserBalanceInStorage();
+
+            const rec = Math.round((amt / 10000) * exchangeRates.robuxBank);
+            const orderId = 'ROBUX-' + Math.floor(1000 + Math.random() * 9000);
+
+            adminOrders.unshift({ id: orderId, customer: currentUser.username, robuxUser: u, detail: `Quy đổi Robux: Nhận ${rec.toLocaleString('vi-VN')} Robux`, price: amt, status: 'Chờ xử lý', isTopup: false, productId: null });
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+
+            showNotification('Đặt đơn Robux thành công! Vui lòng liên hệ Zalo 0395033213 để được duyệt.');
+            switchTab('orderchat');
+        }
+
+        function setCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-violet-600', 'text-white');
+                btn.classList.add('bg-dark-800', 'text-gray-300');
+            });
+            if (event && event.target) {
+                event.target.classList.remove('bg-dark-800', 'text-gray-300');
+                event.target.classList.add('bg-violet-600', 'text-white');
+            }
+
+            const coinSec = document.getElementById('coin-exchange-section');
+            const robuxSec = document.getElementById('robux-exchange-section');
+            const grid = document.getElementById('products-grid');
+            const priceFilterContainer = document.getElementById('price-filter-container');
+
+            coinSec.classList.add('hidden');
+            robuxSec.classList.add('hidden');
+            grid.classList.add('hidden');
+
+            if (category === 'coin') {
+                coinSec.classList.remove('hidden');
+                if (priceFilterContainer) priceFilterContainer.classList.add('hidden');
+            } else if (category === 'robux') {
+                robuxSec.classList.remove('hidden');
+                if (priceFilterContainer) priceFilterContainer.classList.add('hidden');
+            } else {
+                grid.classList.remove('hidden');
+                if (priceFilterContainer) priceFilterContainer.classList.remove('hidden');
+                filterProducts();
+            }
+        }
+
+        function filterProducts() {
+            const kw = document.getElementById('search-input').value.toLowerCase();
+            let filtered = products;
+            
+            if (currentCategory === 'dragon') {
+                filtered = filtered.filter(p => p.category === 'dragon');
+            } else if (currentCategory === 'potion') {
+                filtered = filtered.filter(p => p.category === 'potion');
+            } else if (currentCategory === 'coin') {
+                filtered = filtered.filter(p => p.category === 'coin');
+            } else if (currentCategory === 'robux') {
+                filtered = filtered.filter(p => p.category === 'robux');
+            }
+
+            if (kw) filtered = filtered.filter(p => p.name.toLowerCase().includes(kw));
+
+            if (currentCategory === 'all' || currentCategory === 'dragon' || currentCategory === 'potion') {
+                const minValStr = document.getElementById('price-min').value;
+                const maxValStr = document.getElementById('price-max').value;
+                
+                const minP = parseMoneyInput(minValStr);
+                const maxP = maxValStr ? parseMoneyInput(maxValStr) : Infinity;
+                
+                filtered = filtered.filter(p => {
+                    const priceToCheck = p.price;
+                    const upperLimit = maxP === 0 ? Infinity : maxP;
+                    return priceToCheck >= minP && priceToCheck <= upperLimit;
+                });
+
+                const sortVal = document.getElementById('price-sort-select').value;
+                if (sortVal === 'asc') {
+                    filtered.sort((a, b) => a.price - b.price);
+                } else if (sortVal === 'desc') {
+                    filtered.sort((a, b) => b.price - a.price);
+                }
+            }
+
+            renderProducts(filtered);
+        }
+
+        function renderProducts(list) {
+            const discountRate = getCurrentUserDiscountRate();
+            const gridEl = document.getElementById('products-grid');
+            if (!gridEl) return;
+
+            gridEl.innerHTML = list.length === 0 ? `<div class="col-span-full text-center py-12 text-gray-400 font-semibold glass-panel rounded-3xl border border-violet-500/20">Không có sản phẩm nào phù hợp với khoảng giá này.</div>` : list.map(p => {
+                const isDragon = p.category === 'dragon';
+                const isPotion = p.category === 'potion';
+                const isCoin = p.category === 'coin';
+                const isRobux = p.category === 'robux';
+                
+                const originalPrice = p.price;
+                const effectiveDiscountRate = isRobux ? 0 : discountRate;
+                const discountedPrice = effectiveDiscountRate > 0 ? Math.round(originalPrice * (1 - effectiveDiscountRate)) : originalPrice;
+
+                if (isDragon) {
+                    return `
+                    <div class="glass-panel rounded-3xl overflow-hidden border border-violet-500/30 flex flex-col justify-between p-4 space-y-4 shadow-lg hover:border-violet-500 transition">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-violet-300 uppercase tracking-wider">${p.badge || 'Rồng Hiếm'}</span>
+                                <span class="text-[10px] text-gray-400">ID: #${p.id.toString().slice(-4)}</span>
+                            </div>
+                            <div class="w-full bg-dark-950 rounded-2xl overflow-hidden border border-violet-500/20 relative flex items-center justify-center p-1">
+                                <img src="${p.image}" class="w-full h-auto object-contain max-h-[360px]" onerror="this.src='https://placehold.co/400x400/1E143B/A78BFA?text=Dragon'">
+                            </div>
+                            <div>
+                                <h4 class="font-black text-white text-base">${p.name}</h4>
+                                <p class="text-xs text-gray-400 line-clamp-2 mt-1">${p.desc || 'Rồng hiếm Dragon Adventures chuẩn thông số.'}</p>
+                            </div>
+                            <div class="space-y-1 pt-2 border-t border-violet-900/40">
+                                <div class="bg-dark-900/80 px-3 py-2.5 rounded-xl flex items-center justify-between border border-violet-500/20">
+                                    <span class="text-xs font-bold text-gray-300 uppercase">GIÁ BANK</span>
+                                    <div class="text-right">
+                                        ${effectiveDiscountRate > 0 ? `<span class="text-xs text-gray-400 line-through mr-2">${formatMoney(originalPrice)}</span>` : ''}
+                                        <span class="text-sm font-black text-green-400">${formatMoney(discountedPrice)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addToCart(${p.id})" class="w-full py-3 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 text-white font-bold rounded-xl text-xs shadow-lg transition cursor-pointer flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-cart-shopping pointer-events-none"></i>
+                            <span class="pointer-events-none">Thêm Vào Giỏ Hàng</span>
+                        </button>
+                    </div>
+                    `;
+                }
+
+                return `
+                <div class="glass-panel rounded-2xl overflow-hidden border border-violet-500/20 flex flex-col justify-between">
+                    <div>
+                        <div class="aspect-video bg-dark-950 relative"><img src="${p.image}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x300/1E143B/A78BFA?text=Product'"><span class="absolute top-3 left-3 bg-pink-600 text-white text-xs px-2 py-0.5 rounded font-bold">${p.badge}</span></div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-white text-sm">${p.name}</h4>
+                            <p class="text-xs text-gray-400">${p.desc}</p>
+                            ${isPotion ? `
+                                <div class="flex items-center space-x-2 pt-1">
+                                    <span class="text-xs text-gray-400">Số lượng:</span>
+                                    <input type="number" id="qty-${p.id}" value="1" min="1" max="100" class="w-16 bg-dark-900 border border-violet-500/30 rounded-lg px-2 py-1 text-xs text-white text-center">
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0 flex items-center justify-between">
+                        <div>
+                            ${effectiveDiscountRate > 0 ? `<span class="text-[11px] text-gray-400 line-through mr-1">${formatMoney(originalPrice)}</span>` : ''}
+                            <span class="text-green-400 font-bold">${formatMoney(discountedPrice)}</span>
+                        </div>
+                        <button type="button" onclick="addToCart(${p.id})" class="bg-violet-600 hover:bg-violet-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer">
+                            <i class="fa-solid fa-cart-plus pointer-events-none"></i> Thêm
+                        </button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function renderFeaturedProducts() { 
+            const discountRate = getCurrentUserDiscountRate();
+            const featEl = document.getElementById('featured-products-grid');
+            if (!featEl) return;
+
+            featEl.innerHTML = products.slice(0, 4).map(p => {
+                const isRobux = p.category === 'robux';
+                const effectiveDiscountRate = isRobux ? 0 : discountRate;
+                const originalPrice = p.price;
+                const discountedPrice = effectiveDiscountRate > 0 ? Math.round(originalPrice * (1 - effectiveDiscountRate)) : originalPrice;
+                return `
+                <div class="glass-panel rounded-2xl overflow-hidden border border-violet-500/20">
+                    <div class="aspect-video bg-dark-950"><img src="${p.image}" class="w-full h-full object-cover"></div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-white text-sm">${p.name}</h4>
+                        <div class="mt-1">
+                            ${effectiveDiscountRate > 0 ? `<span class="text-[11px] text-gray-400 line-through mr-1">${formatMoney(originalPrice)}</span>` : ''}
+                            <span class="text-green-400 font-bold text-xs">${formatMoney(discountedPrice)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join(''); 
+        }
+
+        function formatMoney(amt) { return amt.toLocaleString('vi-VN') + ' VNĐ'; }
+        
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        function toggleAuthMode(m) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const title = document.getElementById('auth-modal-title');
+            if (m === 'register') {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                title.innerText = 'Đăng Ký Tài Khoản';
+            } else {
+                registerForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                title.innerText = 'Đăng Nhập Tài Khoản';
+            }
+        }
+
+        function handleLogin(e) {
+            if (e) e.preventDefault();
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value.trim();
+            
+            registeredUsers = JSON.parse(localStorage.getItem('shop_users')) || [];
+            
+            let found = registeredUsers.find(x => x.username.toLowerCase() === u.toLowerCase() && x.password === p);
+            if (!found && u === '123' && p === '06042007@') {
+                found = { username: '123', password: '06042007@', balance: 99999999, totalSpent: 5000000, lastRankKey: 'phithang', isAdmin: true };
+                registeredUsers.push(found);
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+            }
+            
+            if (found) {
+                currentUser = found;
+                if (currentUser.username.toLowerCase() === '123') {
+                    currentUser.isAdmin = true;
+                }
+                localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                updateUserUI();
+                closeAuthModal();
+                showNotification('Đăng nhập thành công!');
+                if (currentUser.isAdmin) switchTab('admin');
+                else switchTab('home');
+            } else {
+                showNotification('Sai tài khoản hoặc mật khẩu!', true);
+            }
+            return false;
+        }
+
+        function handleRegister(e) {
+            if (e) e.preventDefault();
+            const u = document.getElementById('reg-username').value.trim();
+            const p = document.getElementById('reg-password').value.trim();
+            registeredUsers = JSON.parse(localStorage.getItem('shop_users')) || [];
+            
+            if (!u || !p) { showNotification('Vui lòng điền đầy đủ thông tin!', true); return false; }
+            if (registeredUsers.some(x => x.username.toLowerCase() === u.toLowerCase())) {
+                showNotification('Tên tài khoản này đã tồn tại!', true);
+                return false;
+            }
+
+            const newUser = { username: u, password: p, balance: 0, totalSpent: 0, lastRankKey: 'dong', isAdmin: (u.toLowerCase() === '123') };
+            registeredUsers.push(newUser);
+            localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+            
+            showNotification('Đăng ký thành công! Hãy đăng nhập.');
+            document.getElementById('login-username').value = u;
+            document.getElementById('login-password').value = p;
+            toggleAuthMode('login');
+            return false;
+        }
+
+        function handleBankTransfer(e) {
+            e.preventDefault();
+            const amt = parseMoneyInput(document.getElementById('bank-amount').value);
+            const fileInput = document.getElementById('bank-bill-file');
+            
+            if (amt <= 0) { showNotification('Vui lòng nhập số tiền hợp lệ!', true); return; }
+            
+            let billUrl = 'https://placehold.co/300x350/1E143B/A78BFA?text=Bill+Momo';
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    billUrl = evt.target.result;
+                    saveTopupOrder(amt, billUrl, 'Nạp Momo');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveTopupOrder(amt, billUrl, 'Nạp Momo');
+            }
+        }
+
+        function handleTopupCard(e) {
+            e.preventDefault();
+            const type = document.getElementById('card-type').value;
+            const amt = Number(document.getElementById('card-amount').value);
+            const code = document.getElementById('card-code').value.trim();
+            const serial = document.getElementById('card-serial').value.trim();
+            const fileInput = document.getElementById('card-bill-file');
+
+            let percent = 0.84;
+            if (type === 'Garena' || type === 'Zing') percent = 0.835;
+            const receiveAmount = Math.round(amt * percent);
+
+            const detailText = `Thẻ ${type} (${formatMoney(amt)}) -> Thực nhận: ${formatMoney(receiveAmount)}`;
+            
+            let billUrl = null;
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    billUrl = evt.target.result;
+                    saveCardOrderWithBill(receiveAmount, detailText, billUrl);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveCardOrderWithBill(receiveAmount, detailText, null);
+            }
+        }
+
+        function saveCardOrderWithBill(receiveAmount, detailText, billUrl) {
+            adminOrders.unshift({ 
+                id: 'CARD-' + Math.floor(1000 + Math.random()*9000), 
+                customer: currentUser.username, 
+                robuxUser: 'Thẻ cào', 
+                detail: detailText, 
+                price: receiveAmount, 
+                status: 'Chờ xử lý', 
+                isTopup: true, 
+                billImage: billUrl 
+            });
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            showNotification('Gửi thẻ thành công! Chờ Admin duyệt.'); 
+            
+            switchTab('topup');
+            setTimeout(() => {
+                const el = document.getElementById('section-my-topup-history');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            renderMyHistory();
+        }
+
+        function saveTopupOrder(amt, billUrl, detailText) {
+            adminOrders.unshift({ id: 'BANK-' + Math.floor(1000 + Math.random()*9000), customer: currentUser.username, robuxUser: 'Bank', detail: detailText, price: amt, status: 'Chờ xử lý', isTopup: true, billImage: billUrl });
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            showNotification('Đã gửi xác nhận nạp tiền!'); 
+            
+            switchTab('topup');
+            setTimeout(() => {
+                const el = document.getElementById('section-my-topup-history');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+            renderMyHistory();
+        }
+
+        function renderMyHistory(animateSpent = false, targetSpent = 0) {
+            if (!currentUser) return;
+            
+            let spent = currentUser.totalSpent || 0;
+            let rankName = 'Đồng';
+            let rankDiscount = 'Giảm 0%';
+            let nextRankName = 'Bạc';
+            let nextThreshold = 500000;
+            let rankIcon = 'fa-shield';
+            let rankKey = 'dong';
+
+            let oldRankKey = currentUser.lastRankKey || 'dong';
+
+            if (spent >= 5000000) {
+                rankName = 'Phi Thăng'; rankDiscount = 'Giảm 5%'; nextRankName = 'Đã max hạng'; nextThreshold = 5000000; rankIcon = 'fa-fire'; rankKey = 'phithang';
+            } else if (spent >= 3000000) {
+                rankName = 'Trí Tôn'; rankDiscount = 'Giảm 4%'; nextRankName = 'Phi Thăng'; nextThreshold = 5000000; rankIcon = 'fa-star'; rankKey = 'triton';
+            } else if (spent >= 2000000) {
+                rankName = 'Kim Cương'; rankDiscount = 'Giảm 3%'; nextRankName = 'Trí Tôn'; nextThreshold = 3000000; rankIcon = 'fa-gem'; rankKey = 'kimcuong';
+            } else if (spent >= 1000000) {
+                rankName = 'Vàng'; rankDiscount = 'Giảm 2%'; nextRankName = 'Kim Cương'; nextThreshold = 2000000; rankIcon = 'fa-crown'; rankKey = 'vang';
+            } else if (spent >= 500000) {
+                rankName = 'Bạc'; rankDiscount = 'Giảm 1%'; nextRankName = 'Vàng'; nextThreshold = 1000000; rankIcon = 'fa-shield'; rankKey = 'bac';
+            }
+
+            if (rankKey !== oldRankKey) {
+                currentUser.lastRankKey = rankKey;
+                localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                const rankUpDescEl = document.getElementById('rank-up-desc');
+                if (rankUpDescEl) {
+                    rankUpDescEl.innerText = `Bạn đã thăng hạng lên ${rankName} thành công với ưu đãi ${rankDiscount}!`;
+                    document.getElementById('rank-up-modal').classList.remove('hidden');
+                }
+            }
+
+            const curRankTag = document.getElementById('my-current-rank-tag');
+            if (curRankTag) {
+                curRankTag.innerText = rankName;
+                document.getElementById('current-rank-discount').innerText = 'Giảm giá: ' + rankDiscount.replace('Giảm ', '');
+                document.getElementById('current-rank-icon').className = 'fa-solid ' + rankIcon;
+
+                if (animateSpent) {
+                    let startVal = targetSpent;
+                    let duration = 1000;
+                    let startTime = null;
+                    function step(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        let progress = Math.min((timestamp - startTime) / duration, 1);
+                        let currentVal = Math.floor(startVal + (spent - startVal) * progress);
+                        document.getElementById('my-total-spent-txt').innerText = formatMoney(currentVal);
+                        if (progress < 1) requestAnimationFrame(step);
+                        else document.getElementById('my-total-spent-txt').innerText = formatMoney(spent);
+                    }
+                    requestAnimationFrame(step);
+                } else {
+                    document.getElementById('my-total-spent-txt').innerText = formatMoney(spent);
+                }
+
+                ['dong', 'bac', 'vang', 'kimcuong', 'triton', 'phithang'].forEach(k => {
+                    const card = document.getElementById(`card-rank-${k}`);
+                    const tag = document.getElementById(`badge-rank-${k}-tag`);
+                    if (card && tag) {
+                        if (k === rankKey) {
+                            card.className = "glass-panel p-4 rounded-2xl border border-cyan-400/50 text-center space-y-2 bg-violet-900/30 relative shadow-[0_0_15px_rgba(34,211,238,0.3)]";
+                            tag.classList.remove('hidden');
+                        } else {
+                            card.className = "glass-panel p-4 rounded-2xl border border-violet-500/30 text-center space-y-2 bg-dark-900/60 relative";
+                            tag.classList.add('hidden');
+                        }
+                    }
+                });
+                
+                let prevThreshold = 0;
+                if (rankName === 'Bạc') prevThreshold = 500000;
+                else if (rankName === 'Vàng') prevThreshold = 1000000;
+                else if (rankName === 'Kim Cương') prevThreshold = 2000000;
+                else if (rankName === 'Trí Tôn') prevThreshold = 3000000;
+                else if (rankName === 'Phi Thăng') prevThreshold = 5000000;
+
+                if (rankName === 'Phi Thăng') {
+                    document.getElementById('next-rank-info').innerText = 'Đã đạt mức tối đa';
+                    document.getElementById('progress-percent-label').innerText = '100%';
+                    document.getElementById('next-rank-target-txt').innerText = 'Hoàn thành';
+                    document.getElementById('rank-progress-bar').style.width = '100%';
+                } else {
+                    let range = nextThreshold - prevThreshold;
+                    let currentProgress = spent - prevThreshold;
+                    let pct = Math.min(100, Math.max(0, (currentProgress / range) * 100));
+                    document.getElementById('next-rank-info').innerText = 'Mốc tiếp theo: ' + nextRankName;
+                    document.getElementById('progress-percent-label').innerText = pct.toFixed(2) + '%';
+                    document.getElementById('next-rank-target-txt').innerText = 'Còn thiếu: ' + formatMoney(nextThreshold - spent);
+                    document.getElementById('rank-progress-bar').style.width = pct + '%';
+                }
+
+                document.getElementById('my-orders-table').innerHTML = adminOrders.filter(o => o.customer === currentUser.username && !o.isTopup).map(o => `<tr><td class="py-2 px-3">${o.id}</td><td class="py-2 px-3">${o.detail} (Roblox: ${o.robuxUser})</td><td class="py-2 px-3">${formatMoney(o.price)}</td><td class="py-2 px-3"><span class="px-2 py-1 rounded text-xs ${o.status === 'Hoàn thành' ? 'bg-green-600/30 text-green-300' : 'bg-amber-600/30 text-amber-300'}">${o.status}</span></td></tr>`).join('') || `<tr><td colspan="4" class="text-center py-3 text-gray-500 text-xs">Trống</td></tr>`;
+                document.getElementById('my-topup-table').innerHTML = adminOrders.filter(o => o.customer === currentUser.username && o.isTopup).map(o => `<tr><td class="py-2 px-3">${o.id}</td><td class="py-2 px-3">${o.detail}</td><td class="py-2 px-3">${formatMoney(o.price)}</td><td class="py-2 px-3"><span class="px-2 py-1 rounded text-xs ${o.status === 'Hoàn thành' ? 'bg-green-600/30 text-green-300' : 'bg-amber-600/30 text-amber-300'}">${o.status}</span></td></tr>`).join('') || `<tr><td colspan="4" class="text-center py-3 text-gray-500 text-xs">Trống</td></tr>`;
+            }
+        }
+
+        function closeRankUpModal() { document.getElementById('rank-up-modal').classList.add('hidden'); }
+        function logoutUser() { currentUser = null; localStorage.removeItem('current_logged_user'); updateUserUI(); openAuthModal(); }
+
+        function updateUserUI() {
+            if (currentUser) {
+                if (currentUser.username.toLowerCase() === '123') currentUser.isAdmin = true;
+                const authArea = document.getElementById('auth-action-area');
+                if (authArea) {
+                    authArea.innerHTML = `<div class="flex items-center space-x-2 bg-dark-800 px-3 py-2 rounded-xl"><span class="text-xs font-bold text-violet-300">${currentUser.username}</span><button type="button" onclick="logoutUser()" class="text-red-400 text-xs cursor-pointer"><i class="fa-solid fa-right-from-bracket"></i></button></div>`;
+                }
+                const walletBox = document.getElementById('user-wallet-box');
+                if (walletBox) walletBox.classList.remove('hidden');
+                const walletBal = document.getElementById('wallet-balance');
+                if (walletBal) walletBal.innerText = formatMoney(currentUser.balance || 0);
+
+                const navAdmin = document.getElementById('nav-admin-btn');
+                const mobAdmin = document.getElementById('mobile-admin-btn');
+                if (currentUser.isAdmin) { 
+                    if (navAdmin) navAdmin.classList.remove('hidden'); 
+                    if (mobAdmin) mobAdmin.classList.remove('hidden'); 
+                } else {
+                    if (navAdmin) navAdmin.classList.add('hidden'); 
+                    if (mobAdmin) mobAdmin.classList.add('hidden');
+                }
+                updateCartBadge();
+            } else {
+                const authArea = document.getElementById('auth-action-area');
+                if (authArea) authArea.innerHTML = `<button type="button" onclick="openAuthModal()" class="px-4 py-2 bg-violet-600 text-white text-xs font-bold rounded-xl cursor-pointer">Đăng Nhập</button>`;
+                const walletBox = document.getElementById('user-wallet-box');
+                if (walletBox) walletBox.classList.add('hidden');
+                const navAdmin = document.getElementById('nav-admin-btn');
+                const mobAdmin = document.getElementById('mobile-admin-btn');
+                if (navAdmin) navAdmin.classList.add('hidden'); 
+                if (mobAdmin) mobAdmin.classList.add('hidden');
+            }
+        }
+
+        function switchTab(id, animateSpent = false, oldSpent = 0) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const targetTab = document.getElementById(`tab-${id}`);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+                if (id === 'admin') renderAdminDashboard();
+                if (id === 'history') renderMyHistory(animateSpent, oldSpent);
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
+        function showNotification(text, err=false) {
+            const t = document.getElementById('toast-notification');
+            const msg = document.getElementById('toast-message');
+            if (!t || !msg) return;
+            msg.innerText = text;
+            t.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-32', 'opacity-0'), 3000);
+        }
+
+        function renderAdminDashboard() {
+            if (!currentUser || !currentUser.isAdmin) return;
+            if (document.activeElement && document.activeElement.closest('#tab-admin')) return;
+            
+            const topupTable = document.getElementById('admin-topup-table');
+            if (topupTable) {
+                topupTable.innerHTML = adminOrders.filter(o => o.isTopup).map(o => `
+                    <tr>
+                        <td class="py-2 px-3">${o.id}</td>
+                        <td class="py-2 px-3">${o.customer}</td>
+                        <td class="py-2 px-3">${formatMoney(o.price)}</td>
+                        <td class="py-2 px-3"><span class="px-2 py-1 rounded text-xs ${o.status === 'Hoàn thành' ? 'bg-green-600/30 text-green-300' : 'bg-amber-600/30 text-amber-300'}">${o.status}</span></td>
+                        <td class="py-2 px-3 space-x-1">
+                            ${o.billImage ? `<button type="button" onclick="viewBillImage('${o.billImage}')" class="px-2 py-1 bg-violet-600 text-white rounded text-xs cursor-pointer"><i class="fa-solid fa-eye"></i> Xem Bill</button>` : ''}
+                            ${o.status !== 'Hoàn thành' ? `<button type="button" onclick="adminApproveTopup('${o.id}')" class="px-2 py-1 bg-green-600 text-white rounded text-xs cursor-pointer">Duyệt & Cộng Tiền</button>` : `<span class="text-xs text-green-400 font-bold">Đã cộng tiền</span>`}
+                            <button type="button" onclick="updateOrderStatus('${o.id}', 'Hủy')" class="px-2 py-1 bg-red-600 text-white rounded text-xs cursor-pointer">Hủy</button>
+                        </td>
+                    </tr>
+                `).join('') || `<tr><td colspan="5" class="text-center py-3 text-gray-500 text-xs">Trống</td></tr>`;
+            }
+            
+            const dragonTable = document.getElementById('admin-dragon-orders-table');
+            if (dragonTable) {
+                dragonTable.innerHTML = adminOrders.filter(o => !o.isTopup).map(o => `
+                    <tr>
+                        <td class="py-2 px-3">${o.id}</td>
+                        <td class="py-2 px-3"><strong class="text-pink-400">Roblox: ${o.robuxUser}</strong><br><span class="text-[11px] text-gray-400">User: ${o.customer}</span></td>
+                        <td class="py-2 px-3">${o.detail}</td>
+                        <td class="py-2 px-3"><span class="px-2 py-1 rounded text-xs ${o.status === 'Hoàn thành' ? 'bg-green-600/30 text-green-300' : 'bg-amber-600/30 text-amber-300'}">${o.status}</span></td>
+                        <td class="py-2 px-3 space-x-1">
+                            ${o.status !== 'Hoàn thành' ? `<button type="button" onclick="adminApproveGeneralOrder('${o.id}')" class="px-2 py-1 bg-emerald-600 text-white rounded text-xs cursor-pointer font-bold">Duyệt Đơn</button>` : `<span class="text-xs text-green-400 font-bold">Hoàn tất</span>`}
+                            <button type="button" onclick="adminCancelOrder('${o.id}')" class="px-2 py-1 bg-red-600 text-white rounded text-xs cursor-pointer">Hủy (Hoàn Tiền)</button>
+                        </td>
+                    </tr>
+                `).join('') || `<tr><td colspan="5" class="text-center py-3 text-gray-500 text-xs">Trống</td></tr>`;
+            }
+            
+            renderAdminCategoryList('dragon', 'admin-dragon-list');
+            renderAdminCategoryList('coin', 'admin-coin-list');
+            renderAdminCategoryList('robux', 'admin-robux-list');
+            renderAdminCategoryList('potion', 'admin-potion-list');
+        }
+
+        function viewBillImage(imgUrl) {
+            document.getElementById('bill-img-preview').src = imgUrl;
+            document.getElementById('bill-modal').classList.remove('hidden');
+        }
+        function closeBillModal() { document.getElementById('bill-modal').classList.add('hidden'); }
+
+        function handleBanUser() {
+            const targetName = document.getElementById('ban-username-input').value.trim();
+            if (!targetName) { showNotification('Vui lòng nhập tên tài khoản cần ban!', true); return; }
+            if (targetName.toLowerCase() === currentUser.username.toLowerCase()) { showNotification('Không thể tự ban tài khoản của chính mình!', true); return; }
+
+            registeredUsers = registeredUsers.filter(x => x.username.toLowerCase() !== targetName.toLowerCase());
+            localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+            document.getElementById('ban-username-input').value = '';
+            showNotification(`Đã ban và xóa vĩnh viễn tài khoản "${targetName}" khỏi hệ thống!`);
+        }
+
+        function adminApproveTopup(id) {
+            const o = adminOrders.find(x => x.id === id);
+            if (!o || o.status === 'Hoàn thành') return;
+            o.status = 'Hoàn thành';
+            
+            let u = registeredUsers.find(x => x.username === o.customer);
+            if (u) {
+                u.balance = (u.balance || 0) + o.price;
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+                if (currentUser && currentUser.username === u.username) {
+                    currentUser.balance = u.balance;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                }
+            }
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            renderAdminDashboard();
+            showNotification('Đã duyệt nạp tiền và cộng số dư ví cho khách thành công!');
+        }
+
+        function renderAdminCategoryList(cat, elementId) {
+            const list = products.filter(p => p.category === cat);
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            el.innerHTML = list.length === 0 ? `<p class="text-xs text-gray-500">Trống</p>` : list.map(p => `
+                <div class="glass-panel p-3 rounded-2xl border border-violet-500/30 space-y-2 text-xs">
+                    <div class="flex items-center space-x-2">
+                        <img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border border-violet-500/20" onerror="this.src='https://placehold.co/100x100/1E143B/A78BFA?text=Img'">
+                        <input type="text" id="edit-name-${p.id}" value="${p.name}" oninput="autoSaveProduct(${p.id})" class="flex-1 bg-dark-900 border border-violet-500/30 rounded-lg px-2.5 py-1.5 text-white font-bold">
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="edit-price-${p.id}" value="${p.price}" oninput="autoSaveProduct(${p.id})" class="w-32 bg-dark-900 border border-violet-500/30 rounded-lg px-2.5 py-1.5 text-pink-400 font-bold">
+                        <input type="text" id="edit-desc-${p.id}" value="${p.desc || ''}" oninput="autoSaveProduct(${p.id})" placeholder="Mô tả..." class="flex-1 bg-dark-900 border border-violet-500/30 rounded-lg px-2.5 py-1.5 text-gray-300">
+                    </div>
+                    <div class="flex justify-end pt-1">
+                        <button type="button" onclick="deleteProduct(${p.id})" class="px-3 py-1 bg-red-600 text-white rounded-lg font-bold cursor-pointer">Xóa Sản Phẩm</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openAddProductModal() { document.getElementById('product-modal').classList.remove('hidden'); }
+// ... existing code ... -->
+        function saveBatchProducts(e) {
+            e.preventDefault();
+            const cat = document.getElementById('p-category').value;
+            const price = Number(document.getElementById('p-price').value) || 150000;
+            const linksRaw = document.getElementById('p-links').value.trim();
+            
+            if (!linksRaw) { showNotification('Vui lòng nhập ít nhất một link ảnh!', true); return; }
+
+            const links = linksRaw.split(/[\r\n\s,]+/).map(l => l.trim()).filter(l => l.startsWith('http'));
+
+            if (links.length === 0) {
+                showNotification('Không tìm thấy link ảnh hợp lệ bắt đầu bằng http!', true);
+                return;
+            }
+
+            let count = 0;
+            links.forEach((link, idx) => {
+                const uniqueId = Date.now() + idx;
+                const defaultName = cat === 'dragon' ? `Rồng Hiếm #${Math.floor(100 + Math.random()*900)}` : (cat === 'potion' ? `Pot Hỗ Trợ #${idx+1}` : `Sản Phẩm #${idx+1}`);
+                products.push({
+                    id: uniqueId,
+                    name: defaultName,
+                    category: cat,
+                    price: price,
+                    image: link,
+                    badge: cat === 'dragon' ? 'Hot' : 'VIP',
+                    desc: 'Sản phẩm chính hãng chất lượng cao.'
+                });
+                count++;
+            });
+
+            localStorage.setItem('shop_products', JSON.stringify(products));
+            closeProductModal();
+            document.getElementById('p-links').value = '';
+            document.getElementById('detected-links-count').innerText = 'Đã nhận diện: 0 ảnh';
+            syncDataFromStorage();
+            showNotification(`Đã tạo thành công ${count} sản phẩm hàng loạt!`);
+        }
+
+        function autoSaveProduct(id) {
+            let p = products.find(x => x.id === id);
+            if (!p) return;
+            const nameEl = document.getElementById(`edit-name-${id}`);
+            const priceEl = document.getElementById(`edit-price-${id}`);
+            const descEl = document.getElementById(`edit-desc-${id}`);
+
+            if (nameEl) p.name = nameEl.value.trim();
+            if (priceEl) p.price = Number(priceEl.value) || 0;
+            if (descEl) p.desc = descEl.value.trim();
+
+            // Lưu trực tiếp và đồng bộ lên localStorage ngay lập tức
+            localStorage.setItem('shop_products', JSON.stringify(products));
+            syncDataFromStorage();
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(x => x.id !== id);
+            localStorage.setItem('shop_products', JSON.stringify(products));
+            renderAdminDashboard();
+            syncDataFromStorage();
+            showNotification('Đã xóa sản phẩm!');
+        }
+
+        function adminApproveGeneralOrder(id) {
+            const o = adminOrders.find(x => x.id === id);
+            if (!o || o.status === 'Hoàn thành') return;
+            o.status = 'Hoàn thành';
+            
+            // Nếu là đơn chứa thẻ Rồng, thực hiện xóa thẻ rồng đã bán khỏi kho hàng
+            if (o.productIds && Array.isArray(o.productIds)) {
+                o.productIds.forEach(pid => {
+                    products = products.filter(p => p.id !== pid);
+                });
+                localStorage.setItem('shop_products', JSON.stringify(products));
+            }
+
+            let u = registeredUsers.find(x => x.username === o.customer);
+            if (u) {
+                let oldSpent = u.totalSpent || 0;
+                u.totalSpent = oldSpent + o.price;
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+                if (currentUser && currentUser.username === u.username) {
+                    currentUser.totalSpent = u.totalSpent;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                }
+                localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+                syncDataFromStorage();
+                showNotification('Đã duyệt đơn, xóa thẻ rồng (nếu có) và cộng điểm tích lũy thành công!');
+                return;
+            }
+
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            syncDataFromStorage();
+            showNotification('Đã duyệt đơn thành công!');
+        }
+
+        function adminCancelOrder(id) {
+            const o = adminOrders.find(x => x.id === id);
+            if (!o || o.status === 'Đã hủy & Hoàn tiền' || o.status === 'Hoàn thành') return;
+            o.status = 'Đã hủy & Hoàn tiền';
+            
+            let u = registeredUsers.find(x => x.username === o.customer);
+            if (u) {
+                u.balance = (u.balance || 0) + o.price;
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+                if (currentUser && currentUser.username === u.username) {
+                    currentUser.balance = u.balance;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                }
+            }
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            syncDataFromStorage();
+            showNotification('Đã hủy đơn và hoàn tiền cho khách hàng!');
+        }
+
+        function adminDoneOrder(id) {
+            const o = adminOrders.find(x => x.id === id);
+            if (!o || o.status === 'Hoàn thành') return;
+            o.status = 'Hoàn thành';
+            
+            let u = registeredUsers.find(x => x.username === o.customer);
+            if (u) {
+                let oldSpent = u.totalSpent || 0;
+                u.totalSpent = oldSpent + o.price;
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+                if (currentUser && currentUser.username === u.username) {
+                    currentUser.totalSpent = u.totalSpent;
+                    localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+                }
+                
+                localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+                syncDataFromStorage();
+                
+                switchTab('history', true, oldSpent);
+                showNotification('Đã hoàn thành đơn và cộng điểm tích lũy thành công!');
+                return;
+            }
+
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            syncDataFromStorage();
+            showNotification('Đã hoàn thành đơn!');
+        }
+
+        function updateOrderStatus(id, status) {
+            const o = adminOrders.find(x => x.id === id);
+            if (o) o.status = status;
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            syncDataFromStorage();
+            showNotification('Cập nhật trạng thái thành công!');
+        }
+
+        function updateUserBalanceInStorage() {
+            registeredUsers = JSON.parse(localStorage.getItem('shop_users')) || [];
+            let idx = registeredUsers.findIndex(x => x.username === currentUser.username);
+            if (idx !== -1) {
+                registeredUsers[idx].balance = currentUser.balance;
+                localStorage.setItem('shop_users', JSON.stringify(registeredUsers));
+            }
+        }
+
+        function getUserCartKey() {
+            return currentUser ? `shop_cart_${currentUser.username}` : 'shop_cart_guest';
+        }
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem(getUserCartKey())) || [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem(getUserCartKey(), JSON.stringify(cart));
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const cart = getCart();
+            const badge = document.getElementById('cart-badge');
+            if (!badge) return;
+            if (cart.length > 0) {
+                badge.innerText = cart.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function addToCart(id) {
+            if (!currentUser) { openAuthModal(); return; }
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+
+            let cart = getCart();
+            let qty = 1;
+            const qtyInput = document.getElementById(`qty-${id}`);
+            if (qtyInput) qty = parseInt(qtyInput.value) || 1;
+
+            const discountRate = getCurrentUserDiscountRate();
+            const effectiveDiscountRate = (p.category === 'robux') ? 0 : discountRate;
+            const finalPrice = effectiveDiscountRate > 0 ? Math.round(p.price * (1 - effectiveDiscountRate)) : p.price;
+
+            // Kiểm tra phân tách giỏ hàng: Không cho phép gộp Rồng chung với Coin/Robux/Pot
+            const isDragon = p.category === 'dragon';
+            if (cart.length > 0) {
+                const hasDragonInCart = cart.some(item => item.category === 'dragon');
+                if (isDragon && !hasDragonInCart) {
+                    showNotification('Giỏ hàng đang chứa dịch vụ khác! Vui lòng thanh toán riêng đơn Rồng.', true);
+                    return;
+                }
+                if (!isDragon && hasDragonInCart) {
+                    showNotification('Giỏ hàng đang chứa Rồng! Vui lòng thanh toán đơn Rồng trước khi mua dịch vụ khác.', true);
+                    return;
+                }
+            }
+
+            if (isDragon) {
+                for (let i = 0; i < qty; i++) {
+                    cart.push({ ...p, price: finalPrice, uniqueCartId: Date.now() + Math.random(), buyQty: 1 });
+                }
+            } else {
+                const existing = cart.find(x => x.id === id);
+                if (existing) {
+                    existing.buyQty = (existing.buyQty || 1) + qty;
+                } else {
+                    cart.push({ ...p, price: finalPrice, uniqueCartId: Date.now(), buyQty: qty });
+                }
+            }
+
+            saveCart(cart);
+            showNotification(`Đã thêm ${p.name} vào giỏ hàng!`);
+        }
+
+        function removeFromCart(uniqueCartId) {
+            let cart = getCart();
+            cart = cart.filter(x => x.uniqueCartId !== uniqueCartId);
+            saveCart(cart);
+            openCart();
+        }
+
+        function openCart() { 
+            if (!currentUser) { openAuthModal(); return; }
+            document.getElementById('cart-modal').classList.remove('hidden'); 
+            const cart = getCart();
+            
+            document.getElementById('cart-items').innerHTML = cart.length === 0 ? `<p class="text-gray-400 text-xs text-center py-4">Giỏ hàng trống.</p>` : cart.map(i => `
+                <div class="flex items-center justify-between text-xs text-white bg-dark-900 p-2.5 rounded-xl border border-violet-500/20">
+                    <div>
+                        <p class="font-bold">${i.name} ${i.buyQty > 1 ? `(x${i.buyQty})` : ''}</p>
+                        <p class="text-pink-400 font-semibold">${formatMoney(i.price * (i.buyQty || 1))}</p>
+                    </div>
+                    <button type="button" onclick="removeFromCart(${i.uniqueCartId})" class="text-red-400 hover:text-red-300 p-1.5 cursor-pointer"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((s, i) => s + (i.price * (i.buyQty || 1)), 0);
+            document.getElementById('cart-total').innerText = formatMoney(total); 
+            document.getElementById('wallet-preview').innerText = formatMoney(currentUser.balance || 0);
+        }
+
+        function closeCart() { document.getElementById('cart-modal').classList.add('hidden'); }
+        
+        function checkoutWithBalance() {
+            if (!currentUser) { openAuthModal(); return; }
+            const u = document.getElementById('roblox-username-input').value.trim();
+            const cart = getCart();
+            const total = cart.reduce((s, i) => s + (i.price * (i.buyQty || 1)), 0);
+
+            if (cart.length === 0) { showNotification('Giỏ hàng trống!', true); return; }
+            if (!u) { showNotification('Vui lòng nhập tên Roblox!', true); return; }
+            if ((currentUser.balance || 0) < total) { showNotification('Số dư ví không đủ để thanh toán!', true); return; }
+            
+            currentUser.balance -= total;
+            localStorage.setItem('current_logged_user', JSON.stringify(currentUser));
+            updateUserBalanceInStorage();
+
+            const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+            const detailSummary = cart.map(i => `${i.name}${i.buyQty > 1 ? ` (x${i.buyQty})` : ''}`).join(', ');
+            
+            // Kiểm tra xem đơn hàng có phải chứa Rồng hay không để gán đúng productIds xử lý xóa thẻ khi Admin bấm duyệt
+            const isDragonOrder = cart.some(i => i.category === 'dragon');
+            const productIdsToRem = isDragonOrder ? cart.filter(i => i.category === 'dragon').map(i => i.id) : [];
+
+            adminOrders.unshift({ 
+                id: orderId, 
+                customer: currentUser.username, 
+                robuxUser: u, 
+                detail: detailSummary, 
+                price: total, 
+                status: 'Chờ xử lý', 
+                isTopup: false,
+                productIds: productIdsToRem,
+                isDragonOrder: isDragonOrder
+            });
+
+            localStorage.setItem('shop_orders', JSON.stringify(adminOrders));
+            localStorage.removeItem(getUserCartKey());
+            updateCartBadge();
+
+            closeCart(); 
+            syncDataFromStorage();
+            switchTab('orderchat'); 
+            showNotification('Đặt đơn thành công! Vui lòng liên hệ Zalo 0395033213 để được Admin duyệt.');
+        }
+    </script>
+</body>
+</html>
