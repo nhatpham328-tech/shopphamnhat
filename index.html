@@ -1424,7 +1424,18 @@
         }
 
         function openAddProductModal() { document.getElementById('product-modal').classList.remove('hidden'); }
-// ... existing code ... -->
+
+        // Đếm link ảnh hợp lệ khi quản trị viên dán danh sách.
+        function updateDetectedLinksCount() {
+            const input = document.getElementById('p-links');
+            const counter = document.getElementById('detected-links-count');
+            if (!input || !counter) return;
+            const links = input.value.split(/[\r\n,;]+/)
+                .map(value => value.trim())
+                .filter(value => /^https?:\/\//i.test(value));
+            counter.innerText = `Đã nhận diện: ${links.length} ảnh`;
+        }
+
         function saveBatchProducts(e) {
             e.preventDefault();
             const cat = document.getElementById('p-category').value;
@@ -1433,7 +1444,11 @@
             
             if (!linksRaw) { showNotification('Vui lòng nhập ít nhất một link ảnh!', true); return; }
 
-            const links = linksRaw.split(/[\r\n\s,]+/).map(l => l.trim()).filter(l => l.startsWith('http'));
+            // Mỗi URL nằm trên một dòng hoặc ngăn cách bằng dấu phẩy/chấm phẩy.
+            // Không tách theo khoảng trắng để không làm hỏng URL có query string.
+            const links = [...new Set(linksRaw.split(/[\r\n,;]+/)
+                .map(link => link.trim())
+                .filter(link => /^https?:\/\//i.test(link)))];
 
             if (links.length === 0) {
                 showNotification('Không tìm thấy link ảnh hợp lệ bắt đầu bằng http!', true);
@@ -1442,7 +1457,7 @@
 
             let count = 0;
             links.forEach((link, idx) => {
-                const uniqueId = Date.now() + idx;
+                const uniqueId = `p-${Date.now()}-${idx}-${Math.random().toString(36).slice(2, 8)}`;
                 const defaultName = cat === 'dragon' ? `Rồng Hiếm #${Math.floor(100 + Math.random()*900)}` : (cat === 'potion' ? `Pot Hỗ Trợ #${idx+1}` : `Sản Phẩm #${idx+1}`);
                 products.push({
                     id: uniqueId,
@@ -1475,9 +1490,8 @@
             if (priceEl) p.price = Number(priceEl.value) || 0;
             if (descEl) p.desc = descEl.value.trim();
 
-            // Lưu trực tiếp và đồng bộ lên localStorage ngay lập tức
+            // Lưu trực tiếp; không render lại toàn bộ trang ở mỗi lần gõ.
             localStorage.setItem('shop_products', JSON.stringify(products));
-            syncDataFromStorage();
         }
 
         function deleteProduct(id) {
